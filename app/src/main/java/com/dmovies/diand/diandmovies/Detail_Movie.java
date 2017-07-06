@@ -16,11 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.android.popmovies.R;
-import data.MovieContract;
-import data.MovieDbhelper;
+
 import model.Movie;
 
-import static data.MovieContract.MovieEntry.ID;
 
 /**
  * Created by USER on 27/05/2017.
@@ -39,9 +37,6 @@ public class Detail_Movie extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_movie);
-
-        MovieDbhelper dbhelper = new MovieDbhelper(this);
-        mDb = dbhelper.getWritableDatabase();
 
         Intent intent = getIntent();
         final Movie movie = (Movie) intent.getSerializableExtra("movie");
@@ -68,23 +63,7 @@ public class Detail_Movie extends AppCompatActivity {
         rating.setText(movie.vote_average);
         deskripsi.setText(movie.overview);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(ID, movie.id);
-                contentValues.put(MovieContract.MovieEntry.ORIGINAL_TITLE, movie.original_title);
-                contentValues.put(MovieContract.MovieEntry.RELEASE, movie.release_date);
-                contentValues.put(MovieContract.MovieEntry.VOTE, movie.vote_average);
-                contentValues.put(MovieContract.MovieEntry.OVERVIEW, movie.overview);
-                contentValues.put(MovieContract.MovieEntry.POSTER, movie.poster_image);
-                contentValues.put(MovieContract.MovieEntry.original_language, movie.original_language);
 
-                mDb.insert(MovieContract.MovieEntry.TABLE_NAME, null, contentValues);
-                Toast.makeText(Detail_Movie.this, "Added to Favorite!",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
 
     }
 

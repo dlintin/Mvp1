@@ -40,8 +40,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URL;
 
-import data.MovieContract;
-import data.MovieDbhelper;
+
 import model.Movie;
 import utilities.NetworkUtils;
 
@@ -68,53 +67,9 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("Popular Movie");
-        MovieDbhelper dbhelper = new MovieDbhelper(this);
-        mDb = dbhelper.getWritableDatabase();
-
         refresh_data("popular");
     }
 
-    private JSONArray getFavorite() {
-        Cursor cursor = mDb.query(MovieContract.MovieEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
-
-        JSONArray data = new JSONArray();
-        while (cursor.moveToNext()) {
-            try {
-                JSONObject JSONmovie = new JSONObject();
-                JSONmovie.put("id", cursor.getString(cursor.getColumnIndex("id")));
-                JSONmovie.put("original_title", cursor.getString(cursor.getColumnIndex("original_title")));
-                JSONmovie.put("poster_path", cursor.getString(cursor.getColumnIndex("poster_path")));
-                JSONmovie.put("vote_average", cursor.getString(cursor.getColumnIndex("vote_average")));
-                JSONmovie.put("original_language", cursor.getString(cursor.getColumnIndex("original_language")));
-                JSONmovie.put("release_date", cursor.getString(cursor.getColumnIndex("release_date")));
-                JSONmovie.put("overview", cursor.getString(cursor.getColumnIndex("overview")));
-                data.put(JSONmovie);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        Log.d(TAG, data.toString());
-        return data;
-    }
-
-    private void refresh_local_data(){
-        if (isOnline()) {
-            JSONArray jsonItems = getFavorite();
-            if(jsonItems.length()>0){
-                mAdapter = new Main_Adapter(this,jsonItems,this);
-                mNumbersList.setAdapter(mAdapter);
-            }
-        } else {
-            Toast.makeText(this, "Network Is Not Available", Toast.LENGTH_SHORT).show();
-        }
-    }
 
     public void refresh_data(String sort) {
         if (isOnline()) {
@@ -171,15 +126,6 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
         if (ItemThatWasClickedId == R.id.action_popular) {
             setTitle("Popular Movie");
             refresh_data_pop("popular");
-        }
-        if (ItemThatWasClickedId == R.id.action_favorite) {
-            JSONArray jsonItems = getFavorite();
-            if(jsonItems.length()>0){
-            setTitle("Favorite");
-                refresh_local_data();
-            }else{
-                Toast.makeText(this, "Favorite Is Empty", Toast.LENGTH_LONG).show();
-            }
         }
         if (ItemThatWasClickedId == R.id.action_about) {
             Toast.makeText(this, "By: Dianto Lintin", Toast.LENGTH_LONG).show();
