@@ -20,7 +20,7 @@ public class NetworkUtils {
     final static String BASE_URL =
             "http://api.themoviedb.org/3/movie/popular?api_key=";
 
-    final static String KEY ="PUT_API_KEY_HERE";
+    final static String KEY = Resources.getSystem().getString(R.string.api);
     final static String URL2 = "http://api.themoviedb.org/3/movie/";
     final static String pop = "popular";
     final static String top = "top_rated";
